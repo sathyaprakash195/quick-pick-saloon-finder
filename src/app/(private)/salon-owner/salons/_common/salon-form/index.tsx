@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/select";
 import { addNewSalon, editSalonById } from "@/actions/salons";
 import { IUsersStore, usersGlobalStore } from "@/store/users-store";
+import PlacesAutocomplete from "./address-selection-2";
 
 interface SalonFormProps {
   initialValues?: any;
@@ -82,6 +83,9 @@ function SalonForm({ initialValues, formType }: SalonFormProps) {
     minimum_service_price: z.number().min(0),
     maximum_service_price: z.number().min(0),
     offer_status: z.string().min(3).max(255),
+    latitude: z.string(),
+    longitude: z.string(),
+    location_display_name: z.string().min(3).max(255),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -95,6 +99,9 @@ function SalonForm({ initialValues, formType }: SalonFormProps) {
       minimum_service_price: initialValues?.minimum_service_price || 0,
       maximum_service_price: initialValues?.maximum_service_price || 0,
       offer_status: initialValues?.offer_status || "active",
+      latitude: initialValues?.latitude || 17.385,
+      longitude: initialValues?.longitude || 78.4867,
+      location_display_name: initialValues?.location_display_name || "",
     },
   });
   return (
@@ -236,6 +243,23 @@ function SalonForm({ initialValues, formType }: SalonFormProps) {
                   <FormMessage />
                 </FormItem>
               )}
+            />
+          </div>
+
+          <div className="text-sm flex flex-col gap-1">
+            <p>Search for a place to get the address</p>
+
+            <PlacesAutocomplete
+              value={{
+                latitude: form.getValues().latitude,
+                longitude: form.getValues().longitude,
+              }}
+              onChange={(value:any) => {
+                form.setValue("latitude", value.latitude);
+                form.setValue("longitude", value.longitude);
+                form.setValue("location_display_name", value.location_display_name);
+              }}
+              initialValues={initialValues}
             />
           </div>
 
