@@ -16,6 +16,9 @@ export interface ISalon {
   minimum_service_price: number;
   maximum_service_price: number;
   offer_status: "active" | "inactive";
+  latitude: string
+  longitude: string
   owner: IUser;
   created_at: string;
+  updated_at: string;
 }

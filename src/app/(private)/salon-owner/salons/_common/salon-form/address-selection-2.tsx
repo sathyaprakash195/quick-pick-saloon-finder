@@ -15,12 +15,16 @@ interface PlacesAutocompleteProps {
   value: any;
   onChange: (value: any) => void;
   initialValues: any;
+  hideMap?: boolean;
+  placeholder?: string;
 }
 
 const PlacesAutocomplete = ({
   value,
   onChange,
   initialValues,
+  hideMap = false,
+  placeholder,
 }: PlacesAutocompleteProps) => {
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
@@ -109,7 +113,7 @@ const PlacesAutocomplete = ({
         lat: initialValues.latitude,
         lon: initialValues.longitude,
         display_name: initialValues.location_display_name,
-      })
+      });
     }
   }, [initialValues]);
 
@@ -117,7 +121,7 @@ const PlacesAutocomplete = ({
     <div>
       <Input
         type="text"
-        placeholder="Search places..."
+        placeholder={placeholder || "Search for a location"}
         value={query}
         onChange={(e) => setQuery(e.target.value)}
       />
@@ -144,14 +148,16 @@ const PlacesAutocomplete = ({
           </div>
         ))}
       </div>
-      <div
-        id="map"
-        style={{
-          width: "100%",
-          height: "400px",
-          marginTop: "10px",
-        }}
-      ></div>
+      {!hideMap && (
+        <div
+          id="map"
+          style={{
+            width: "100%",
+            height: "400px",
+            marginTop: "10px",
+          }}
+        ></div>
+      )}
     </div>
   );
 };

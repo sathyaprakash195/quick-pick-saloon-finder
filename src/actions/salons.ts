@@ -67,7 +67,7 @@ export const getSalonById = async (id: string) => {
     const { data: salons, error } = await supabase
       .from("salons")
       .select("*")
-      .match({ id })
+      .match({ id });
     if (error) {
       throw new Error(error.message);
     }
@@ -91,6 +91,24 @@ export const deleteSalonById = async (id: string) => {
     }
     return {
       success: true,
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+};
+
+export const getAllSalons = async () => {
+  try {
+    const { data: salons, error } = await supabase.from("salons").select("*");
+    if (error) {
+      throw new Error(error.message);
+    }
+    return {
+      success: true,
+      data: salons,
     };
   } catch (error: any) {
     return {
