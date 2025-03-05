@@ -16,8 +16,18 @@ export interface ISalon {
   minimum_service_price: number;
   maximum_service_price: number;
   offer_status: "active" | "inactive";
-  latitude: string
-  longitude: string
+  latitude: string;
+  longitude: string;
+
+  working_days: string[];
+  start_time: string;
+  end_time: string;
+  break_start_time: string;
+  break_end_time: string;
+
+  slot_duration: number;
+  max_bookings_per_slot: number;
+
   owner: IUser;
   created_at: string;
   updated_at: string;

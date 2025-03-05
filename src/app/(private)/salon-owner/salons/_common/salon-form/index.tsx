@@ -27,6 +27,8 @@ import {
 import { addNewSalon, editSalonById } from "@/actions/salons";
 import { IUsersStore, usersGlobalStore } from "@/store/users-store";
 import PlacesAutocomplete from "./address-selection-2";
+import { Checkbox } from "@/components/ui/checkbox";
+import { workingDays } from "@/constants";
 
 interface SalonFormProps {
   initialValues?: any;
@@ -83,6 +85,16 @@ function SalonForm({ initialValues, formType }: SalonFormProps) {
     minimum_service_price: z.number().min(0),
     maximum_service_price: z.number().min(0),
     offer_status: z.string().min(3).max(255),
+
+    working_days: z.array(z.string()),
+    start_time: z.string(),
+    end_time: z.string(),
+    break_start_time: z.string(),
+    break_end_time: z.string(),
+
+    slot_duration: z.number().min(0),
+    max_bookings_per_slot: z.number().min(0),
+
     latitude: z.string(),
     longitude: z.string(),
     location_display_name: z.string().min(3).max(255),
@@ -99,11 +111,34 @@ function SalonForm({ initialValues, formType }: SalonFormProps) {
       minimum_service_price: initialValues?.minimum_service_price || 0,
       maximum_service_price: initialValues?.maximum_service_price || 0,
       offer_status: initialValues?.offer_status || "active",
+
+      working_days: initialValues?.working_days || [],
+      start_time: initialValues?.start_time || "",
+      end_time: initialValues?.end_time || "",
+      break_start_time: initialValues?.break_start_time || "",
+      break_end_time: initialValues?.break_end_time || "",
+
+      slot_duration: initialValues?.slot_duration || 0,
+      max_bookings_per_slot: initialValues?.max_bookings_per_slot || 0,
+
       latitude: initialValues?.latitude || 17.385,
       longitude: initialValues?.longitude || 78.4867,
       location_display_name: initialValues?.location_display_name || "",
     },
   });
+
+  const onWorkingDaysChange = (value: string) => {
+    const workingDays = form.getValues().working_days;
+    if (workingDays.includes(value)) {
+      form.setValue(
+        "working_days",
+        workingDays.filter((day) => day !== value)
+      );
+    } else {
+      form.setValue("working_days", [...workingDays, value]);
+    }
+  };
+
   return (
     <div className="mt-5">
       <Form {...form}>
@@ -246,6 +281,143 @@ function SalonForm({ initialValues, formType }: SalonFormProps) {
             />
           </div>
 
+          <div className="flex flex-col gap-5 border border-gray-300 p-5 rounded-md my-10">
+            <div>
+              <FormLabel>Working Days</FormLabel>
+              <div className="flex gap-10 flex-wrap mt-2">
+                {workingDays.map((day) => {
+                  const isChecked = form.watch("working_days").includes(day.value);
+                  
+                  return (
+                    <div className="flex items-center gap-2" key={day.value}>
+                      <p className="text-sm">{day.label}</p>
+                      <Checkbox
+                        checked={isChecked}
+                        aria-checked={isChecked}
+                        onCheckedChange={() => onWorkingDaysChange(day.value)}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-3 gap-5">
+              <FormField
+                control={form.control}
+                name="start_time"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel>Start Time</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="time"
+                        placeholder=""
+                        {...field}
+                        onChange={(e) => field.onChange(e.target.value)}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="end_time"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel>End Time</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="time"
+                        placeholder=""
+                        {...field}
+                        onChange={(e) => field.onChange(e.target.value)}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="break_start_time"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel>Break Start Time</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="time"
+                        placeholder=""
+                        {...field}
+                        onChange={(e) => field.onChange(e.target.value)}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="break_end_time"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel>Break End Time</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="time"
+                        placeholder=""
+                        {...field}
+                        onChange={(e) => field.onChange(e.target.value)}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="slot_duration"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel>Slot Duration</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder=""
+                        {...field}
+                        onChange={(e) =>
+                          field.onChange(parseInt(e.target.value))
+                        }
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="max_bookings_per_slot"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel>Max Bookings Per Slot</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder=""
+                        {...field}
+                        onChange={(e) =>
+                          field.onChange(parseInt(e.target.value))
+                        }
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+          </div>
+
           <div className="text-sm flex flex-col gap-1">
             <p>Search for a place to get the address</p>
 
@@ -254,16 +426,19 @@ function SalonForm({ initialValues, formType }: SalonFormProps) {
                 latitude: form.getValues().latitude,
                 longitude: form.getValues().longitude,
               }}
-              onChange={(value:any) => {
+              onChange={(value: any) => {
                 form.setValue("latitude", value.latitude);
                 form.setValue("longitude", value.longitude);
-                form.setValue("location_display_name", value.location_display_name);
+                form.setValue(
+                  "location_display_name",
+                  value.location_display_name
+                );
               }}
               initialValues={initialValues}
             />
           </div>
 
-          <div className="flex justify-end gap-5">
+          <div className="flex justify-end gap-5 my-10">
             <Button
               type="button"
               variant="secondary"

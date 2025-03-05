@@ -1,7 +1,23 @@
 import { NextResponse, NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
-  return NextResponse.next();
+  try {
+    const token = request.cookies.get("token")?.value;
+    const isPrivateRoute =
+      request.nextUrl.pathname.startsWith("/user") ||
+      request.nextUrl.pathname.startsWith("/salon-owner");
+
+    if (!token && isPrivateRoute) {
+      return NextResponse.redirect(new URL("/login", request.url));
+    }
+
+    if (token && !isPrivateRoute) {
+      const role = request.cookies.get("role")?.value;
+      return NextResponse.redirect(new URL(`/${role}/dashboard`, request.url));
+    }
+  } catch (error) {
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
 }
 
 export const config = {

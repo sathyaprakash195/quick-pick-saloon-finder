@@ -1,39 +1,4 @@
-export const userRoles = [
-  {
-    label: "User",
-    value: "user",
-    condition: "true",
-  },
-  {
-    label: "Seller",
-    value: "seller",
-    condition: "is_seller",
-  },
-  {
-    label: "Admin",
-    value: "admin",
-    condition: "is_admin",
-  },
-];
 
-export const categories = [
-  {
-    label: "Vegetables",
-    value: "vegetables",
-  },
-  {
-    label: "Fruits",
-    value: "fruits",
-  },
-  {
-    label: "Dairy",
-    value: "dairy",
-  },
-  {
-    label: "Others",
-    value: "others",
-  },
-];
 
 
 export const sortByOptions = [
@@ -50,3 +15,35 @@ export const sortByOptions = [
     value: "newest",
   },
 ];
+
+
+export const workingDays = [
+  {
+    label: "Monday",
+    value: "monday",
+  },
+  {
+    label: "Tuesday",
+    value: "tuesday",
+  },
+  {
+    label: "Wednesday",
+    value: "wednesday",
+  },
+  {
+    label: "Thursday",
+    value: "thursday",
+  },
+  {
+    label: "Friday",
+    value: "friday",
+  },
+  {
+    label: "Saturday",
+    value: "saturday",
+  },
+  {
+    label: "Sunday",
+    value: "sunday",
+  }
+]

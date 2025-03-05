@@ -102,7 +102,11 @@ export const deleteSalonById = async (id: string) => {
 
 export const getAllSalons = async () => {
   try {
-    const { data: salons, error } = await supabase.from("salons").select("*");
+    const { data: salons, error } = await supabase
+      .from("salons")
+      .select("*")
+      .neq("latitude", null)
+      .neq("longitude", null);
     if (error) {
       throw new Error(error.message);
     }

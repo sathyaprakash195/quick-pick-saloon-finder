@@ -45,7 +45,8 @@ export const loginUser = async (payload: any) => {
     const { data, error } = await supabase
       .from("user_profiles")
       .select()
-      .eq("email", payload.email);
+      .eq("email", payload.email)
+      .eq("role", payload.role);
     if (error) {
       throw new Error("Error finding user");
     }

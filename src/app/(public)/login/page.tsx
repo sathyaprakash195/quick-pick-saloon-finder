@@ -32,6 +32,7 @@ function LoginPage() {
         throw new Error(response.message);
       }
       Cookies.set("token", response.data);
+      Cookies.set("role", values.role);
       toast.success("Login successful");
       router.push(`/${values.role}/dashboard`);
     } catch (error: any) {
