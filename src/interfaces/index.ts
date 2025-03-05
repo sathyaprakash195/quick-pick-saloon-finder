@@ -32,3 +32,19 @@ export interface ISalon {
   created_at: string;
   updated_at: string;
 }
+
+export interface IAppointment {
+  id: string;
+  user_id: string;
+  salon_id: string;
+  date: string;
+  start_time: string;
+  end_time: string;
+  status: "booked" | "cancelled" | "completed";
+  created_at: string;
+  updated_at: string;
+
+  // runtime fields
+  user: IUser;
+  salon: ISalon;
+}

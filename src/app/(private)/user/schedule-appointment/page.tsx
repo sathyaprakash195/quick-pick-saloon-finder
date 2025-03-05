@@ -7,6 +7,7 @@ import { getDistance } from "@/helpers/distance";
 import { ISalon } from "@/interfaces";
 import React, { useEffect } from "react";
 import PlacesAutocomplete from "../../salon-owner/salons/_common/salon-form/address-selection-2";
+import { useRouter } from "next/navigation";
 
 const filterOptions = [
   {
@@ -33,6 +34,7 @@ function ScheduleAppointment() {
   const [selectedFilter, setSelectedFilter] = React.useState("");
   const [currentLocation, setCurrentLocation] = React.useState<any>(null);
   const [loading, setLoading] = React.useState(true);
+  const router = useRouter();
   const getData = async () => {
     try {
       setLoading(true);
@@ -126,9 +128,7 @@ function ScheduleAppointment() {
         <div className="flex flex-col gap-5 mt-7">
           <PlacesAutocomplete
             value={currentLocation}
-            onChange={(value) =>
-              setCurrentLocation(value)
-            }
+            onChange={(value) => setCurrentLocation(value)}
             initialValues={{}}
             hideMap
             placeholder="Select your location"
@@ -138,6 +138,9 @@ function ScheduleAppointment() {
               <div
                 className="border border-gray-300 p-5 rounded hover:border-black cursor-pointer"
                 key={salon.id}
+                onClick={() =>
+                  router.push(`/user/schedule-appointment/${salon.id}`)
+                }
               >
                 <h1 className="text-sm font-bold">{salon.name}</h1>
                 <p className="text-xs text-gray-500">{salon.address}</p>
