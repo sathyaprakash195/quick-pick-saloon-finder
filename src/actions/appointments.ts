@@ -44,3 +44,82 @@ export const getAppointmentsByUser = async (userId: string) => {
     };
   }
 };
+
+export const getAppointmentsOfSalonOwner = async ({
+  salonIds,
+  date,
+}: {
+  salonIds: string[];
+  date: string;
+}) => {
+  try {
+    let qry = supabase
+      .from("appointments")
+      .select("* , salons(id , name) , user_profiles(name)")
+      .in("salon_id", salonIds);
+    if (date) {
+      qry = qry.eq("date", date);
+    }
+
+    const { data, error } = await qry;
+    if (error) {
+      throw error;
+    }
+    return {
+      success: true,
+      data: data.map((appointment: any) => ({
+        ...appointment,
+        salon: appointment.salons,
+        user: appointment.user_profiles,
+      })),
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: "Failed to fetch appointments",
+    };
+  }
+};
+
+export const getAppointmentAvailability = async ({
+  salonId,
+  date,
+  time,
+  maxSlots,
+}: {
+  salonId: string;
+  date: string;
+  time: string;
+  maxSlots: number;
+}) => {
+  try {
+    const { data, error } = await supabase
+      .from("appointments")
+      .select("*")
+      .eq("salon_id", salonId)
+      .eq("date", date)
+      .eq("start_time", time);
+
+    if (error) {
+      throw error;
+    }
+
+    if (data.length >= maxSlots) {
+      return {
+        success: false,
+        message: "Slot not available",
+      };
+    }
+
+    return {
+      success: true,
+      message: "Slot available",
+      availableSlots: maxSlots - data.length,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: "Failed to check availability",
+    };
+  }
+};
