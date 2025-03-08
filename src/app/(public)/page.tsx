@@ -24,7 +24,7 @@ function Homepage() {
             them.
           </p>
           <Button className="w-max">
-            <Link href="/barbers">Find a Barber</Link>
+            <Link href="/barbers">Find a Salon</Link>
           </Button>
         </div>
         <div className="col-span-1 flex justify-end">
