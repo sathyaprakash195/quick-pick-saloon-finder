@@ -123,3 +123,21 @@ export const getAppointmentAvailability = async ({
     };
   }
 };
+
+export const updateAppointmentStatus = async ({ id, status }: { id: string; status: string }) => {
+  try {
+    const { error } = await supabase.from("appointments").update({ status }).eq("id", id);
+    if (error) {
+      throw error;
+    }
+    return {
+      success: true,
+      message: "Appointment status updated successfully",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: "Failed to update appointment status",
+    };
+  }
+}

@@ -8,6 +8,7 @@ import { ISalon } from "@/interfaces";
 import React, { useEffect } from "react";
 import PlacesAutocomplete from "../../salon-owner/salons/_common/salon-form/address-selection-2";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 const filterOptions = [
   {
@@ -105,7 +106,11 @@ function ScheduleAppointment() {
           <select
             className="border border-gray-300 rounded p-2 w-80 text-sm"
             onChange={(e) => {
-              setSelectedFilter(e.target.value);
+              if (e.target.value === "nearby" && !currentLocation) {
+                return toast.error("Please select your location first");
+              } else {
+                setSelectedFilter(e.target.value);
+              }
             }}
           >
             <option value="">Select</option>
@@ -136,17 +141,23 @@ function ScheduleAppointment() {
           <div className="flex flex-col gap-5">
             {filteredSalons.map((salon: ISalon) => (
               <div
-                className="border border-gray-300 p-5 rounded hover:border-black cursor-pointer"
+                className="border border-gray-300 p-5 rounded hover:border-black cursor-pointer flex flex-col"
                 key={salon.id}
                 onClick={() =>
                   router.push(`/user/schedule-appointment/${salon.id}`)
                 }
               >
-                <h1 className="text-sm font-bold">{salon.name}</h1>
-                <p className="text-xs text-gray-500">{salon.address}</p>
+                <div>
+                  <h1 className="text-sm font-bold">{salon.name}</h1>
+                  <p className="text-xs text-gray-500">{salon.address}</p>
+                </div>
+
+                <h1 className="text-[13px] mt-3 font-semibold">
+                  Minimum service price: $ {salon.minimum_service_price}
+                </h1>
 
                 {selectedFilter === "nearby" && (
-                  <h1 className="text-xs mt-5">
+                  <h1 className="text-[13px] mt-1 font-semibold">
                     Distance:{" "}
                     {getDistance({
                       sourceLat: parseFloat(currentLocation.latitude),

@@ -22,6 +22,7 @@ function PrivateLayout({ children }: { children: React.ReactNode }) {
         throw new Error(response.message);
       }
     } catch (error: any) {
+      Cookies.remove("token");
       router.push("/login");
       toast.error(error.message);
     } finally {

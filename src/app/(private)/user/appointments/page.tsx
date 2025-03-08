@@ -1,5 +1,8 @@
 "use client";
-import { getAppointmentsByUser } from "@/actions/appointments";
+import {
+  getAppointmentsByUser,
+  updateAppointmentStatus,
+} from "@/actions/appointments";
 import { IAppointment } from "@/interfaces";
 import { IUsersStore, usersGlobalStore } from "@/store/users-store";
 import React, { useEffect } from "react";
@@ -15,6 +18,7 @@ import {
 import PageTitle from "@/components/page-title";
 import Spinner from "@/components/spinner";
 import Info from "@/components/info";
+import { appointmentStatuses } from "@/constants";
 
 function UserAppointmentsPage() {
   const [appointments, setAppointments] = React.useState<IAppointment[]>([]);
@@ -34,6 +38,31 @@ function UserAppointmentsPage() {
       toast.error("Failed to fetch appointments");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleStatusChange = async (appointmentId: string, status: string) => {
+    try {
+      const response: any = await updateAppointmentStatus({
+        id: appointmentId,
+        status,
+      });
+      if (!response.success) {
+        throw new Error(response.message);
+      }
+      toast.success(response.message);
+      const updatedAppointments: any = appointments.map((appointment) => {
+        if (appointment.id === appointmentId) {
+          return {
+            ...appointment,
+            status,
+          };
+        }
+        return appointment;
+      });
+      setAppointments(updatedAppointments);
+    } catch (error) {
+      toast.error("Failed to update appointment status");
     }
   };
 
@@ -80,9 +109,20 @@ function UserAppointmentsPage() {
                 <TableCell>{appointment.end_time}</TableCell>
                 <TableCell>{appointment.status}</TableCell>
                 <TableCell>
-                  <button className="text-red-800 underline capitalize cursor-pointer">
-                    Cancel
-                  </button>
+                  <select
+                    onChange={(e) =>
+                      handleStatusChange(appointment.id, e.target.value)
+                    }
+                    value={appointment.status}
+                    className="border border-gray-400 rounded px-2 py-1 text-sm"
+                    disabled={appointment.status === "cancelled" || appointment.status === "completed"}
+                  >
+                    {appointmentStatuses.map((status, index) => (
+                      <option key={index} value={status.value}>
+                        {status.label}
+                      </option>
+                    ))}
+                  </select>
                 </TableCell>
               </TableRow>
             ))}

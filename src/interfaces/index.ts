@@ -4,6 +4,7 @@ export interface IUser {
   email: string;
   password: string;
   role: "user" | "salon-owner" | "admin";
+  created_at: string;
 }
 
 export interface ISalon {

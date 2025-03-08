@@ -47,3 +47,19 @@ export const workingDays = [
     value: "sunday",
   }
 ]
+
+
+export const appointmentStatuses = [
+  {
+    label: "Booked",
+    value: "booked",
+  },
+  {
+    label: "Cancelled",
+    value: "cancelled",
+  },
+  {
+    label: "Completed",
+    value: "completed",
+  },
+];
