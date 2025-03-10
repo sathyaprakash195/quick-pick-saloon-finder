@@ -423,8 +423,8 @@ function SalonForm({ initialValues, formType }: SalonFormProps) {
 
             <PlacesAutocomplete
               value={{
-                latitude: form.getValues().latitude,
-                longitude: form.getValues().longitude,
+                latitude: form.getValues()?.latitude,
+                longitude: form.getValues()?.longitude,
               }}
               onChange={(value: any) => {
                 form.setValue("latitude", value.latitude);

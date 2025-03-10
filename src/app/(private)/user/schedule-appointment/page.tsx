@@ -127,9 +127,9 @@ function ScheduleAppointment() {
         </div>
       </div>
       {loading && <Spinner parentHeight={120} />}
-      {!loading && !salons.length && <Info message="No salons found" />}
+      {!loading && salons.length===0 && <Info message="No salons found" />}
 
-      {!loading && salons.length && (
+      {!loading && salons.length > 0 && (
         <div className="flex flex-col gap-5 mt-7">
           <PlacesAutocomplete
             value={currentLocation}
