@@ -108,11 +108,11 @@ const PlacesAutocomplete = ({
   };
 
   useEffect(() => {
-    if (initialValues.latitude && initialValues.longitude) {
+    if (initialValues?.latitude && initialValues?.longitude) {
       handleSelectLocation({
-        lat: initialValues.latitude,
-        lon: initialValues.longitude,
-        display_name: initialValues.location_display_name,
+        lat: initialValues?.latitude,
+        lon: initialValues?.longitude,
+        display_name: initialValues?.location_display_name,
       });
     }
   }, [initialValues]);

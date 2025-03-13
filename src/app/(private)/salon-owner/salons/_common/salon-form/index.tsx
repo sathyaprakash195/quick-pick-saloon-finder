@@ -427,8 +427,8 @@ function SalonForm({ initialValues, formType }: SalonFormProps) {
                 longitude: form.getValues()?.longitude,
               }}
               onChange={(value: any) => {
-                form.setValue("latitude", value.latitude);
-                form.setValue("longitude", value.longitude);
+                form.setValue("latitude", value?.latitude);
+                form.setValue("longitude", value?.longitude);
                 form.setValue(
                   "location_display_name",
                   value.location_display_name
