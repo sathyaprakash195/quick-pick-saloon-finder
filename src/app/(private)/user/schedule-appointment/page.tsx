@@ -84,6 +84,17 @@ function ScheduleAppointment() {
         });
       }
 
+      if (filter === "top-rated") {
+        sorted = [...salons].sort((a: ISalon, b: ISalon) => {
+          return b.average_rating - a.average_rating;
+        });
+      }
+
+      if (filter === "best-offers") {
+        sorted = [...salons].sort((a: ISalon, b: ISalon) => {
+          return b.offer_status === "active" ? 1 : -1;
+        });
+      }
       setFilteredSalons(sorted);
     } catch (error) {
       setFilteredSalons(salons);
@@ -91,7 +102,7 @@ function ScheduleAppointment() {
   };
 
   useEffect(() => {
-    if (selectedFilter && currentLocation) {
+    if ((selectedFilter==='nearby' && currentLocation) || selectedFilter !== "nearby") {
       sortSalons(selectedFilter);
     }
   }, [currentLocation, selectedFilter]);
@@ -127,7 +138,7 @@ function ScheduleAppointment() {
         </div>
       </div>
       {loading && <Spinner parentHeight={120} />}
-      {!loading && salons.length===0 && <Info message="No salons found" />}
+      {!loading && salons.length === 0 && <Info message="No salons found" />}
 
       {!loading && salons.length > 0 && (
         <div className="flex flex-col gap-5 mt-7">

@@ -29,6 +29,9 @@ export interface ISalon {
   slot_duration: number;
   max_bookings_per_slot: number;
 
+  average_rating: number;
+  total_reviews: number;
+
   owner: IUser;
   created_at: string;
   updated_at: string;
@@ -42,6 +45,23 @@ export interface IAppointment {
   start_time: string;
   end_time: string;
   status: "booked" | "cancelled" | "completed";
+  is_review_given: boolean;
+  created_at: string;
+  updated_at: string;
+
+
+  // runtime fields
+  user: IUser;
+  salon: ISalon;
+}
+
+
+export interface IReview {
+  id: string;
+  user_id: string;
+  salon_id: string;
+  rating: number;
+  comment: string;
   created_at: string;
   updated_at: string;
 

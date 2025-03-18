@@ -1,5 +1,8 @@
 "use client";
-import { getAppointmentsOfSalonOwner } from "@/actions/appointments";
+import {
+  getAppointmentsOfSalonOwner,
+  updateAppointmentStatus,
+} from "@/actions/appointments";
 import { getSalonsByOwnerId } from "@/actions/salons";
 import PageTitle from "@/components/page-title";
 import Spinner from "@/components/spinner";
@@ -18,16 +21,19 @@ import {
 import Info from "@/components/info";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { appointmentStatuses } from "@/constants";
+import dayjs from "dayjs";
+import Filters from "@/components/filters";
 
 function SalonOwnerAppointmentsPage() {
   const [appointments, setAppointments] = React.useState<IAppointment[]>([]);
   const [salons = [], setSalons] = React.useState<ISalon[]>([]);
   const [date = "", setDate] = React.useState<string>("");
   const [selectedSalon = "", setSelectedSalon] = React.useState<string>("");
+  const [selectedStatus = "", setSelectedStatus] = React.useState<string>("");
   const [loading = true, setLoading] = React.useState<boolean>(true);
-  const [filtersCleared = false, setFiltersCleared] = React.useState<boolean>(
-    false
-  );
+  const [filtersCleared = false, setFiltersCleared] =
+    React.useState<boolean>(false);
   const { user } = usersGlobalStore() as IUsersStore;
   const fetchAppointments = async () => {
     try {
@@ -35,6 +41,7 @@ function SalonOwnerAppointmentsPage() {
       const response: any = await getAppointmentsOfSalonOwner({
         salonIds: selectedSalon ? [selectedSalon] : salons.map((s) => s.id),
         date,
+        status: selectedStatus,
       });
       if (!response.success) {
         throw new Error(response.message);
@@ -69,6 +76,31 @@ function SalonOwnerAppointmentsPage() {
     }
   }, [salons]);
 
+  const handleStatusChange = async (appointmentId: string, status: string) => {
+    try {
+      const response: any = await updateAppointmentStatus({
+        id: appointmentId,
+        status,
+      });
+      if (!response.success) {
+        throw new Error(response.message);
+      }
+      toast.success(response.message);
+      const updatedAppointments: any = appointments.map((appointment) => {
+        if (appointment.id === appointmentId) {
+          return {
+            ...appointment,
+            status,
+          };
+        }
+        return appointment;
+      });
+      setAppointments(updatedAppointments);
+    } catch (error) {
+      toast.error("Failed to update appointment status");
+    }
+  };
+
   useEffect(() => {
     if (filtersCleared) {
       fetchAppointments();
@@ -93,49 +125,19 @@ function SalonOwnerAppointmentsPage() {
     <div className="flex flex-col gap-5">
       <PageTitle title="Appointments" />
 
-      <div className="grid grid-cols-4 gap-5 items-end">
-        <div className="flex gap-1 flex-col">
-          <h1 className="text-sm">Select Salon</h1>
-          <select
-            value={selectedSalon}
-            onChange={(e) => setSelectedSalon(e.target.value)}
-            className="w-full p-[10px] border border-gray-500 rounded-lg text-sm"
-          >
-            <option value="">All</option>
-            {salons.map((salon) => (
-              <option key={salon.id} value={salon.id}
-               className="text-sm"
-              >
-                {salon.name}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="flex flex-col gap-1">
-          <h1 className="text-sm">Select Date</h1>
-          <Input
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-          />
-        </div>
-
-        <div className="grid grid-cols-2 gap-5">
-          <Button
-            onClick={() => {
-              setDate("");
-              setSelectedSalon("");
-              setFiltersCleared(true);
-            }}
-            variant={'outline'}
-          >
-            Clear Filters
-          </Button>
-          <Button onClick={fetchAppointments}>Apply Filter</Button>
-        </div>
-      </div>
-
+      <Filters
+        {...{
+          salons,
+          selectedSalon,
+          setSelectedSalon,
+          date,
+          setDate,
+          selectedStatus,
+          setSelectedStatus,
+          setFiltersCleared,
+          fetchData: fetchAppointments,
+        }}
+      />
       {loading && <Spinner />}
 
       {!loading && appointments.length === 0 && (
@@ -161,7 +163,28 @@ function SalonOwnerAppointmentsPage() {
                 <TableCell>{appointment.date}</TableCell>
                 <TableCell>{appointment.start_time}</TableCell>
                 <TableCell>{appointment.end_time}</TableCell>
-                <TableCell>{appointment.status}</TableCell>
+                <TableCell>
+                  <select
+                    onChange={(e) =>
+                      handleStatusChange(appointment.id, e.target.value)
+                    }
+                    value={appointment.status}
+                    className="border border-gray-400 rounded px-2 py-1 text-sm"
+                    disabled={
+                      appointment.status === "cancelled" ||
+                      appointment.status === "completed" ||
+                      dayjs(appointment.date).isBefore(dayjs(), "day")
+                    }
+                  >
+                    {appointmentStatuses.map((status, index) => (
+                      <option key={index} value={status.value}>
+                        {status.label}
+                      </option>
+                    ))}
+
+                    <option value="completed">Completed</option>
+                  </select>
+                </TableCell>
                 <TableCell>
                   <button className="text-red-800 underline capitalize cursor-pointer">
                     Cancel

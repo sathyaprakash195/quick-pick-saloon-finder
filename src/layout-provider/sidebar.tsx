@@ -49,6 +49,11 @@ function Sidebar({ showMenu, setShowMenu }: SidebarProps) {
       path: "/user/appointments",
     },
     {
+      title: "My Reviews",
+      icon: <HeartHandshake size={14} />,
+      path : "/user/reviews"
+    },
+    {
       title: "Profile",
       icon: <UserSquare size={14} />,
       path: "/user/profile",
@@ -71,10 +76,15 @@ function Sidebar({ showMenu, setShowMenu }: SidebarProps) {
       icon: <User2 size={14} />,
       path: "/salon-owner/appointments",
     },
+    // {
+    //   title: "Customers",
+    //   icon: <FolderKanban size={14} />,
+    //   path: "/salon-owner/customers",
+    // },
     {
-      title: "Customers",
-      icon: <FolderKanban size={14} />,
-      path: "/salon-owner/customers",
+      title: "Reviews",
+      icon: <HeartHandshake size={14} />,
+      path : "/salon-owner/reviews"
     },
     {
       title: "Profile",
@@ -116,7 +126,7 @@ function Sidebar({ showMenu, setShowMenu }: SidebarProps) {
                   : ""
               }`}
               onClick={() => {
-                router.push(item.path);
+                router.push(item.path!);
                 setShowMenu(false);
               }}
             >

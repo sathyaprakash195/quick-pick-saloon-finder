@@ -2,7 +2,19 @@
 
 import supabase from "@/config/supabase-client-config";
 
-export const getDashboardData = async (userId: string, role: string) => {
+export const getDashboardData = async (
+  userId: string,
+  role: string,
+  {
+    salonIds = [],
+    date = "",
+    status = "",
+  }: {
+    salonIds?: string[];
+    date?: string;
+    status?: string;
+  } = {}
+) => {
   try {
     let qry = supabase.from("appointments").select("* , salons(*)");
 
@@ -11,6 +23,19 @@ export const getDashboardData = async (userId: string, role: string) => {
     } else if (role === "salon-owner") {
       qry = qry.eq("salons.owner_id", userId);
     }
+
+    if (salonIds.length) {
+      qry.in("salon_id", salonIds);
+    }
+
+    if (date) {
+      qry = qry.eq("date", date);
+    }
+
+    if (status) {
+      qry = qry.eq("status", status);
+    }
+
     const { data, error } = await qry;
     if (error) {
       return {

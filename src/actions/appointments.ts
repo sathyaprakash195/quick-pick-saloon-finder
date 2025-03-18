@@ -24,7 +24,7 @@ export const getAppointmentsByUser = async (userId: string) => {
   try {
     const { data, error } = await supabase
       .from("appointments")
-      .select("* , salons(name)")
+      .select("* , salons(name , id , average_rating , total_reviews)")
       .eq("user_id", userId);
 
     if (error) {
@@ -48,9 +48,11 @@ export const getAppointmentsByUser = async (userId: string) => {
 export const getAppointmentsOfSalonOwner = async ({
   salonIds,
   date,
+  status,
 }: {
   salonIds: string[];
   date: string;
+  status: string;
 }) => {
   try {
     let qry = supabase
@@ -59,6 +61,9 @@ export const getAppointmentsOfSalonOwner = async ({
       .in("salon_id", salonIds);
     if (date) {
       qry = qry.eq("date", date);
+    }
+    if (status) {
+      qry = qry.eq("status", status);
     }
 
     const { data, error } = await qry;
@@ -124,9 +129,18 @@ export const getAppointmentAvailability = async ({
   }
 };
 
-export const updateAppointmentStatus = async ({ id, status }: { id: string; status: string }) => {
+export const updateAppointmentStatus = async ({
+  id,
+  status,
+}: {
+  id: string;
+  status: string;
+}) => {
   try {
-    const { error } = await supabase.from("appointments").update({ status }).eq("id", id);
+    const { error } = await supabase
+      .from("appointments")
+      .update({ status })
+      .eq("id", id);
     if (error) {
       throw error;
     }
@@ -140,4 +154,4 @@ export const updateAppointmentStatus = async ({ id, status }: { id: string; stat
       message: "Failed to update appointment status",
     };
   }
-}
+};
