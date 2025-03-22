@@ -89,6 +89,10 @@ export const deleteSalonById = async (id: string) => {
     if (error) {
       throw new Error(error.message);
     }
+
+    // delete reviews , appointments and services related to this salon
+    await supabase.from("reviews").delete().match({ salon_id: id });
+    await supabase.from("appointments").delete().match({ salon_id: id });
     return {
       success: true,
     };

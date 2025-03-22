@@ -135,6 +135,7 @@ function UserAppointmentsPage() {
     "Start Time",
     "End Time",
     "Status",
+    "Booked At",
     "Actions",
   ];
 
@@ -167,6 +168,7 @@ function UserAppointmentsPage() {
                 <TableCell>{appointment.start_time}</TableCell>
                 <TableCell>{appointment.end_time}</TableCell>
                 <TableCell>{appointment.status}</TableCell>
+                <TableCell>{dayjs(appointment.created_at).format("MMM DD, YYYY hh:mm A")}</TableCell>
                 <TableCell className="flex gap-5">
                   <select
                     onChange={(e) =>

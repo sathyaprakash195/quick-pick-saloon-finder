@@ -1,5 +1,5 @@
 "use client";
-import { getSalonsByOwnerId } from "@/actions/salons";
+import { deleteSalonById, getSalonsByOwnerId } from "@/actions/salons";
 import PageTitle from "@/components/page-title";
 import { Button } from "@/components/ui/button";
 import { ISalon } from "@/interfaces";
@@ -38,6 +38,23 @@ function SaloonsListPage() {
       }
     } catch (error) {
       toast.error("Failed to fetch salons");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const deleteSalonHandler = async (id: string) => {
+    try {
+      setLoading(true);
+      const response = await deleteSalonById(id);
+      if (response.success) {
+        toast.success("Salon deleted successfully");
+        fetchSalons();
+      } else {
+        toast.error(response.message);
+      }
+    } catch (error) {
+      toast.error("Failed to delete salon");
     } finally {
       setLoading(false);
     }
@@ -105,7 +122,11 @@ function SaloonsListPage() {
                         <Edit2 size={12} />
                       </Button>
                     </Link>
-                    <Button variant={"outline"} size={"icon"}>
+                    <Button
+                      variant={"outline"}
+                      size={"icon"}
+                      onClick={() => deleteSalonHandler(salon.id)}
+                    >
                       <Trash2 size={12} />
                     </Button>
                   </div>

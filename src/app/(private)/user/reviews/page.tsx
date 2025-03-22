@@ -65,7 +65,7 @@ function UserReviews() {
               )}
               {renderProperty(
                 "Reviewed On",
-                dayjs(review.created_at).format("DD MMM YYYY")
+                dayjs(review.created_at).format("MMM DD, YYYY hh:mm A")
               )}
 
               <div className="flex flex-col col-span-3">

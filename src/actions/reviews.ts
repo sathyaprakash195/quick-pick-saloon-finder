@@ -1,6 +1,7 @@
 "use server";
 
 import supabase from "@/config/supabase-client-config";
+import dayjs from "dayjs";
 
 export const submitNewReview = async (
   review: any,
@@ -41,7 +42,8 @@ export const getReviewsBySalonId = async (salonId: string) => {
     const { data, error } = await supabase
       .from("reviews")
       .select("* , user_profiles(name)")
-      .eq("salon_id", salonId);
+      .eq("salon_id", salonId)
+      .order("created_at", { ascending: false });
     if (error) throw error;
     return {
       success: true,
@@ -65,7 +67,8 @@ export const getReviewsByUserId = async (userId: string) => {
     const { data, error } = await supabase
       .from("reviews")
       .select("* , salons(name)")
-      .eq("user_id", userId);
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false });
     if (error) throw error;
 
     console.log(data);
@@ -86,20 +89,41 @@ export const getReviewsByUserId = async (userId: string) => {
   }
 };
 
-export const getReviewsByOwnerId = async (ownerId: string) => {
+export const getReviewsByOwnerId = async ({
+  date = "",
+  salonIds = [],
+  rating = 0,
+}: any) => {
   try {
-    const { data, error } = await supabase
+    let qry = supabase
       .from("reviews")
-      .select("* , user_profiles(name) , salons(name)")
-      .eq("owner_id", ownerId);
+      .select("* , user_profiles(name) , salons(name)");
+
+    if (date) {
+      qry = qry
+        .lt("created_at", dayjs(date).add(1, "day").toISOString())
+        .gte("created_at", dayjs(date).toISOString());
+    }
+
+    if (salonIds.length) {
+      qry.in("salon_id", salonIds);
+    }
+
+    if (rating) {
+      qry.eq("rating", rating);
+    }
+
+    const { data, error } = await qry.order("created_at", { ascending: false });
     if (error) throw error;
+
+    console.log(data);
     return {
       success: true,
       data: data.map((review: any) => {
         return {
           ...review,
-          user: review.user_profiles[0],
-          salon: review.salons[0],
+          user: review.user_profiles,
+          salon: review.salons,
         };
       }),
     };

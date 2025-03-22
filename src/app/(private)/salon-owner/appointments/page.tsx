@@ -118,6 +118,7 @@ function SalonOwnerAppointmentsPage() {
     "Start Time",
     "End Time",
     "Status",
+    "Booked At",
     "Actions",
   ];
 
@@ -184,6 +185,9 @@ function SalonOwnerAppointmentsPage() {
 
                     <option value="completed">Completed</option>
                   </select>
+                </TableCell>
+                <TableCell>
+                  {dayjs(appointment.created_at).format("MMM DD, YYYY hh:mm A")}
                 </TableCell>
                 <TableCell>
                   <button className="text-red-800 underline capitalize cursor-pointer">

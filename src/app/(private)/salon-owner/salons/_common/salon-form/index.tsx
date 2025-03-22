@@ -92,8 +92,8 @@ function SalonForm({ initialValues, formType }: SalonFormProps) {
     break_start_time: z.string(),
     break_end_time: z.string(),
 
-    slot_duration: z.number().min(0),
-    max_bookings_per_slot: z.number().min(0),
+    slot_duration: z.number(),
+    max_bookings_per_slot: z.number(),
 
     latitude: z.string(),
     longitude: z.string(),
@@ -226,7 +226,9 @@ function SalonForm({ initialValues, formType }: SalonFormProps) {
                   <FormControl>
                     <Input
                       placeholder=""
+                      type="number"
                       {...field}
+                      value={field.value || ""}
                       onChange={(e) => field.onChange(parseInt(e.target.value))}
                     />
                   </FormControl>
@@ -244,6 +246,8 @@ function SalonForm({ initialValues, formType }: SalonFormProps) {
                     <Input
                       placeholder=""
                       {...field}
+                      type="number"
+                      value={field.value || ""}
                       onChange={(e) => field.onChange(parseInt(e.target.value))}
                     />
                   </FormControl>
@@ -386,8 +390,10 @@ function SalonForm({ initialValues, formType }: SalonFormProps) {
                       <Input
                         placeholder=""
                         {...field}
+                        type="number"
+                        value={field.value || ""}
                         onChange={(e) =>
-                          field.onChange(parseInt(e.target.value))
+                          field.onChange(parseFloat(e.target.value))
                         }
                       />
                     </FormControl>
@@ -406,6 +412,8 @@ function SalonForm({ initialValues, formType }: SalonFormProps) {
                       <Input
                         placeholder=""
                         {...field}
+                        type="number"
+                        value={field.value || ""}
                         onChange={(e) =>
                           field.onChange(parseInt(e.target.value))
                         }

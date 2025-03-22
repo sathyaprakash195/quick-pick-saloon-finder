@@ -25,7 +25,7 @@ export const getAppointmentsByUser = async (userId: string) => {
     const { data, error } = await supabase
       .from("appointments")
       .select("* , salons(name , id , average_rating , total_reviews)")
-      .eq("user_id", userId);
+      .eq("user_id", userId).order("created_at" , {ascending : false});
 
     if (error) {
       throw error;
@@ -58,7 +58,7 @@ export const getAppointmentsOfSalonOwner = async ({
     let qry = supabase
       .from("appointments")
       .select("* , salons(id , name) , user_profiles(name)")
-      .in("salon_id", salonIds);
+      .in("salon_id", salonIds).order("created_at" , {ascending : false});
     if (date) {
       qry = qry.eq("date", date);
     }
