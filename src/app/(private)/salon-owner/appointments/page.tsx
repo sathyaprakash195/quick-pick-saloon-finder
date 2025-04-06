@@ -19,8 +19,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import Info from "@/components/info";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { appointmentStatuses } from "@/constants";
 import dayjs from "dayjs";
 import Filters from "@/components/filters";

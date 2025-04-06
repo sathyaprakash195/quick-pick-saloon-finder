@@ -10,7 +10,7 @@ export const getDistanceBetweenPlaces = (
     haversine(
       { latitude: lat1, longitude: lon1 },
       { latitude: lat2, longitude: lon2 }
-    ) / 1000
+    ) / 1609.344 // Convert meters to miles
   );
 };
 
@@ -24,6 +24,6 @@ export const getDistance = ({
     haversine(
       { latitude: sourceLat, longitude: sourceLng },
       { latitude: destinationLat, longitude: destinationLng }
-    ) / 1000
+    ) / 1609.344 // Convert meters to miles
   );
 };

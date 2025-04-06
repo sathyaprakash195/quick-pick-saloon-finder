@@ -25,7 +25,8 @@ export const getAppointmentsByUser = async (userId: string) => {
     const { data, error } = await supabase
       .from("appointments")
       .select("* , salons(name , id , average_rating , total_reviews)")
-      .eq("user_id", userId).order("created_at" , {ascending : false});
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false });
 
     if (error) {
       throw error;
@@ -58,7 +59,8 @@ export const getAppointmentsOfSalonOwner = async ({
     let qry = supabase
       .from("appointments")
       .select("* , salons(id , name) , user_profiles(name)")
-      .in("salon_id", salonIds).order("created_at" , {ascending : false});
+      .in("salon_id", salonIds)
+      .order("created_at", { ascending: false });
     if (date) {
       qry = qry.eq("date", date);
     }
@@ -152,6 +154,58 @@ export const updateAppointmentStatus = async ({
     return {
       success: false,
       message: "Failed to update appointment status",
+    };
+  }
+};
+
+export const getUniqueCustomersOfAnOwner = async (ownerId: any) => {
+  try {
+    const { data: salonIds, error: salonError } = await supabase
+      .from("salons")
+      .select("id")
+      .eq("owner_id", ownerId);
+    if (salonError) {
+      throw salonError;
+    }
+    if (salonIds.length === 0) {
+      return {
+        success: false,
+        message: "No salons found for this owner",
+      };
+    }
+    const { data, error } = await supabase
+      .from("appointments")
+      .select("user_profiles(id , name , email)")
+      .in(
+        "salon_id",
+        salonIds.map((salon: any) => salon.id)
+      )
+      .eq("status", "completed");
+
+    if (error) {
+      throw error;
+    }
+
+    let uniqueCustomers: any = [];
+
+    data.forEach((appointment: any) => {
+      if (
+        !uniqueCustomers.some(
+          (customer: any) => customer.id === appointment.user_profiles.id
+        )
+      ) {
+        uniqueCustomers.push(appointment.user_profiles);
+      }
+    });
+
+    return {
+      success: true,
+      data: uniqueCustomers,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: "Failed to fetch customers",
     };
   }
 };

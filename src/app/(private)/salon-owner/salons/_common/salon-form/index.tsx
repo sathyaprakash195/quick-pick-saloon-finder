@@ -289,9 +289,32 @@ function SalonForm({ initialValues, formType }: SalonFormProps) {
             <div>
               <FormLabel>Working Days</FormLabel>
               <div className="flex gap-10 flex-wrap mt-2">
+                <div className="flex items-center gap-2">
+                  <p className="text-sm">All</p>
+                  <Checkbox
+                    checked={
+                      form.watch("working_days").length === workingDays.length
+                    }
+                    onCheckedChange={() => {
+                      if (
+                        form.watch("working_days").length === workingDays.length
+                      ) {
+                        form.setValue("working_days", []);
+                      } else {
+                        form.setValue(
+                          "working_days",
+                          workingDays.map((day) => day.value)
+                        );
+                      }
+                    }}
+                  />
+                </div>
+
                 {workingDays.map((day) => {
-                  const isChecked = form.watch("working_days").includes(day.value);
-                  
+                  const isChecked = form
+                    .watch("working_days")
+                    .includes(day.value);
+
                   return (
                     <div className="flex items-center gap-2" key={day.value}>
                       <p className="text-sm">{day.label}</p>

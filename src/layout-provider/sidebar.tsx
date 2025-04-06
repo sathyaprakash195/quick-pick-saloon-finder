@@ -76,11 +76,11 @@ function Sidebar({ showMenu, setShowMenu }: SidebarProps) {
       icon: <User2 size={14} />,
       path: "/salon-owner/appointments",
     },
-    // {
-    //   title: "Customers",
-    //   icon: <FolderKanban size={14} />,
-    //   path: "/salon-owner/customers",
-    // },
+    {
+      title: "Customers",
+      icon: <FolderKanban size={14} />,
+      path: "/salon-owner/customers",
+    },
     {
       title: "Reviews",
       icon: <HeartHandshake size={14} />,

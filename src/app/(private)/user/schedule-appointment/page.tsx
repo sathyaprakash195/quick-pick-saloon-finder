@@ -29,7 +29,11 @@ const filterOptions = [
   },
 ];
 
-function ScheduleAppointment() {
+function ScheduleAppointment({
+  fromPublicRoute = false,
+}: {
+  fromPublicRoute?: boolean;
+}) {
   const [salons, setSalons] = React.useState([]);
   const [filteredSalons, setFilteredSalons] = React.useState([]);
   const [selectedFilter, setSelectedFilter] = React.useState("");
@@ -102,7 +106,10 @@ function ScheduleAppointment() {
   };
 
   useEffect(() => {
-    if ((selectedFilter==='nearby' && currentLocation) || selectedFilter !== "nearby") {
+    if (
+      (selectedFilter === "nearby" && currentLocation) ||
+      selectedFilter !== "nearby"
+    ) {
       sortSalons(selectedFilter);
     }
   }, [currentLocation, selectedFilter]);
@@ -110,7 +117,9 @@ function ScheduleAppointment() {
   return (
     <div>
       <div className="flex gap-5 items-center justify-between">
-        <PageTitle title="Schedule Appointment" />
+        <PageTitle
+          title={fromPublicRoute ? "Find Salon" : "Schedule Appointment"}
+        />
 
         <div className="flex flex-col gap-1">
           <h1 className="text-sm text-gray-500">Filter by</h1>
@@ -154,9 +163,13 @@ function ScheduleAppointment() {
               <div
                 className="border border-gray-300 p-5 rounded hover:border-black cursor-pointer flex flex-col"
                 key={salon.id}
-                onClick={() =>
-                  router.push(`/user/schedule-appointment/${salon.id}`)
-                }
+                onClick={() => {
+                  if (fromPublicRoute) {
+                    router.push(`/login`);
+                  } else {
+                    router.push(`/schedule-appointment/${salon.id}`);
+                  }
+                }}
               >
                 <div>
                   <h1 className="text-sm font-bold">{salon.name}</h1>
