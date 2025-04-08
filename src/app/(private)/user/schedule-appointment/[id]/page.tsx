@@ -182,9 +182,10 @@ function SecheduleAppointmentCheckout() {
                 selected={
                   date && date !== "Invalid Date" ? new Date(date) : null
                 }
-                onChange={(date: any) =>
-                  setDate(dayjs(date).format("YYYY-MM-DD"))
-                }
+                onChange={(date: any) => {
+                  setDate(dayjs(date).format("YYYY-MM-DD"));
+                  setStartTime("");
+                }}
                 dateFormat="yyyy-MM-dd"
                 className="border border-gray-300 rounded p-2 text-sm w-full"
                 minDate={new Date()}
