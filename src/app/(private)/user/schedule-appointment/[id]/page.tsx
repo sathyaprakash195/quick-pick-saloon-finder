@@ -112,7 +112,7 @@ function SecheduleAppointmentCheckout() {
   }, []);
 
   useEffect(() => {
-    if (date && date !== "Invalid date" && startTime) {
+    if (date && date !== "Invalid Date" && startTime) {
       checkAvaialbility();
     }
   }, [date, startTime]);
@@ -179,7 +179,9 @@ function SecheduleAppointmentCheckout() {
             <div>
               <h1 className="text-sm">Select Date</h1>
               <DatePicker
-                selected={date ? new Date(date) : null}
+                selected={
+                  date && date !== "Invalid Date" ? new Date(date) : null
+                }
                 onChange={(date: any) =>
                   setDate(dayjs(date).format("YYYY-MM-DD"))
                 }
@@ -208,7 +210,11 @@ function SecheduleAppointmentCheckout() {
               >
                 <option value="">Select Start Time</option>
                 {slots.map((slot) => (
-                  <option key={slot} value={slot}>
+                  <option
+                    key={slot}
+                    value={slot}
+                    disabled={dayjs(`${date} ${slot}`).isBefore(dayjs())}
+                  >
                     {slot}
                   </option>
                 ))}

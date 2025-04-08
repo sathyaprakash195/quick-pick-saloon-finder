@@ -167,7 +167,7 @@ function ScheduleAppointment({
                   if (fromPublicRoute) {
                     router.push(`/login`);
                   } else {
-                    router.push(`/schedule-appointment/${salon.id}`);
+                    router.push(`/user/schedule-appointment/${salon.id}`);
                   }
                 }}
               >
@@ -189,7 +189,7 @@ function ScheduleAppointment({
                       destinationLat: parseFloat(salon.latitude),
                       destinationLng: parseFloat(salon.longitude),
                     }).toFixed(2)}{" "}
-                    km
+                    M
                   </h1>
                 )}
               </div>

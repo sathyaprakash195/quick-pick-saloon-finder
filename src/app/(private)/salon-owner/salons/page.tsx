@@ -66,6 +66,7 @@ function SaloonsListPage() {
 
   const columns = [
     "Name",
+    "Address",
     "City",
     "State",
     "Zip",
@@ -106,6 +107,7 @@ function SaloonsListPage() {
             {salons.map((salon: ISalon) => (
               <TableRow key={salon.id}>
                 <TableCell>{salon.name}</TableCell>
+                <TableCell>{salon.address}</TableCell>
                 <TableCell>{salon.city}</TableCell>
                 <TableCell>{salon.state}</TableCell>
                 <TableCell>{salon.zip}</TableCell>
