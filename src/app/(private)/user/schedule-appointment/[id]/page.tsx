@@ -180,7 +180,7 @@ function SecheduleAppointmentCheckout() {
               <h1 className="text-sm">Select Date</h1>
               <DatePicker
                 selected={
-                  date && date !== "Invalid Date" ? new Date(date) : null
+                  date && date !== "Invalid Date" ? dayjs(date).toDate() : null
                 }
                 onChange={(date: any) => {
                   setDate(dayjs(date).format("YYYY-MM-DD"));
